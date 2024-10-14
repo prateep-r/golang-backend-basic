@@ -15,6 +15,7 @@ import (
 	"time"
 	"training/app/product"
 	"training/logger"
+	"training/redis"
 
 	"github.com/gin-gonic/gin"
 	"training/app"
@@ -103,11 +104,12 @@ func router(cfg config.Config) (*gin.Engine, func()) {
 	apiV1Router := r.Group("/api/v1")
 
 	db := database.NewPostgresDB(cfg.Database.PostgresURL)
+	redisClient := redis.New(cfg.Database.RedisURL, "")
 
 	productRouter := apiV1Router.Group("/product")
 	{
 		productRepository := product.NewRepository(db)
-		productService := product.NewService(productRepository)
+		productService := product.NewService(productRepository, redisClient)
 		productHandler := product.NewHandler(productService)
 		productHandler.InitEndpoints(productRouter)
 	}

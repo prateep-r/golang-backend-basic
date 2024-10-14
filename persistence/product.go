@@ -11,6 +11,6 @@ type Product struct {
 	Price       float64
 	CreatedBy   string
 	CreatedAt   time.Time
-	UpdatedBy   string
-	UpdatedAt   time.Time
+	UpdatedBy   *string
+	UpdatedAt   *time.Time
 }

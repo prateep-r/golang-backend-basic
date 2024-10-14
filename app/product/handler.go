@@ -1,6 +1,7 @@
 package product
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
@@ -28,24 +29,22 @@ func (h *Handler) InitEndpoints(r gin.IRoutes) {
 func (h *Handler) Get(c *gin.Context) {
 	var req GetProductRequest
 	if err := c.ShouldBindUri(&req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	if err := validator.Validate(c, req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	product, err := h.service.GetById(c, uuid.MustParse(req.ProductId))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, app.Response{
-			Message: err.Error(),
-		})
+		if errors.Is(err, app.ErrNotFound) {
+			c.JSON(http.StatusNotFound, app.Response{Message: err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, app.Response{Message: err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, GetProductResponse{
@@ -59,16 +58,12 @@ func (h *Handler) Save(c *gin.Context) {
 
 	var req SaveProductRequest
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	if err := validator.Validate(c, req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
@@ -77,9 +72,7 @@ func (h *Handler) Save(c *gin.Context) {
 		Price:       req.Price,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, app.Response{Message: err.Error()})
 		return
 	}
 	c.JSON(http.StatusCreated, payload)
@@ -88,23 +81,17 @@ func (h *Handler) Save(c *gin.Context) {
 func (h *Handler) Update(c *gin.Context) {
 	var req UpdateProductRequest
 	if err := c.ShouldBindUri(&req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	if err := c.ShouldBind(&req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	if err := validator.Validate(c, req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
@@ -114,9 +101,12 @@ func (h *Handler) Update(c *gin.Context) {
 		Price:       req.Price,
 	})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, app.Response{
-			Message: err.Error(),
-		})
+		if errors.Is(err, app.ErrNotFound) {
+			c.JSON(http.StatusNotFound, app.Response{Message: err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, app.Response{Message: err.Error()})
 		return
 	}
 	c.Status(http.StatusOK)
@@ -125,24 +115,23 @@ func (h *Handler) Update(c *gin.Context) {
 func (h *Handler) Delete(c *gin.Context) {
 	var req DeleteProductRequest
 	if err := c.ShouldBindUri(&req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	if err := validator.Validate(c, req); err != nil {
-		c.JSON(http.StatusBadRequest, app.Response{
-			Message: err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, app.Response{Message: err.Error()})
 		return
 	}
 
 	err := h.service.Delete(c, uuid.MustParse(req.ProductId))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, app.Response{
-			Message: err.Error(),
-		})
+		if errors.Is(err, app.ErrNotFound) {
+			c.JSON(http.StatusNotFound, app.Response{Message: err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, app.Response{Message: err.Error()})
 		return
 	}
 	c.Status(http.StatusOK)

@@ -10,3 +10,12 @@ server-restart:
 
 api:
 	go run cmd/api/main.go
+
+producer:
+	go run cmd/producer/main.go
+
+consumer:
+	go run cmd/consumer/main.go
+
+redis:
+	go run cmd/redis/main.go

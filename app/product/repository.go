@@ -2,8 +2,11 @@ package product
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"training/app"
 	"training/persistence"
 )
 
@@ -37,7 +40,7 @@ func (r *repository) Insert(ctx context.Context, product persistence.Product) er
 }
 
 func (r *repository) Update(ctx context.Context, product persistence.Product) error {
-	_, err := r.db.Exec(ctx,
+	cmd, err := r.db.Exec(ctx,
 		"update product set product_name = $1, price = $2, updated_by = $3, updated_at = $4 where product_id = $5",
 		product.ProductName,
 		product.Price,
@@ -45,15 +48,30 @@ func (r *repository) Update(ctx context.Context, product persistence.Product) er
 		product.UpdatedAt,
 		product.ProductId,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	if cmd.RowsAffected() == 0 {
+		return app.ErrNotFound
+	}
+
+	return nil
 }
 
 func (r *repository) Delete(ctx context.Context, productId uuid.UUID) error {
-	_, err := r.db.Exec(ctx,
+	cmd, err := r.db.Exec(ctx,
 		"delete from product where product_id = $1",
 		productId,
 	)
-	return err
+	if err != nil {
+		return err
+	}
+
+	if cmd.RowsAffected() == 0 {
+		return app.ErrNotFound
+	}
+	return nil
 }
 
 func (r *repository) SelectById(ctx context.Context, productId uuid.UUID) (*persistence.Product, error) {
@@ -69,6 +87,9 @@ func (r *repository) SelectById(ctx context.Context, productId uuid.UUID) (*pers
 		&product.UpdatedBy,
 		&product.UpdatedAt,
 	); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, app.ErrNotFound
+		}
 		return nil, err
 	}
 

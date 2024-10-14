@@ -25,8 +25,8 @@ type AccessControl struct {
 }
 
 type Database struct {
-	MongoURL    string `env:"MONGO_URL"`    // example: mongodb://localhost:27017
 	PostgresURL string `env:"POSTGRES_URL"` // example: postgres://postgres:password@localhost:5432/dbname?sslmode=disable
+	RedisURL    string `env:"REDIS_URL"`
 }
 
 type Header struct {
