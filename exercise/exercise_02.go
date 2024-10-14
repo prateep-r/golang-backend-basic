@@ -1,5 +1,10 @@
 package exercise
 
+import (
+	"time"
+	"training/pointer_func"
+)
+
 // Ex02 /* ให้ return slice of product ตามโครงสร้าง json ดังนี้
 //
 //	[{
@@ -36,5 +41,39 @@ package exercise
 //
 // */
 func Ex02() []Product {
-	return []Product{}
+	return []Product{
+		{
+			ProductId:    1111,
+			ProductCode:  "COKE",
+			ProductName:  "Coca cola",
+			ProductPrice: pointer_func.ToPointer(15.00),
+			ProductUnit:  Can,
+			CreatedBy:    "Josh",
+			CreatedAt:    time.Now(),
+			UpdatedBy:    pointer_func.ToPointer("Sarah"),
+			UpdatedAt:    pointer_func.ToPointer(time.Now()),
+		},
+		{
+			ProductId:    2222,
+			ProductCode:  "PEPSI",
+			ProductName:  "Pepsi",
+			ProductPrice: pointer_func.ToPointer(15.50),
+			ProductUnit:  Bottom,
+			CreatedBy:    "John",
+			CreatedAt:    time.Now(),
+			UpdatedBy:    nil,
+			UpdatedAt:    nil,
+		},
+		{
+			ProductId:    3333,
+			ProductCode:  "SPRITE",
+			ProductName:  "Sprite",
+			ProductPrice: nil,
+			ProductUnit:  Glass,
+			CreatedBy:    "Peter",
+			CreatedAt:    time.Now(),
+			UpdatedBy:    nil,
+			UpdatedAt:    nil,
+		},
+	}
 }
