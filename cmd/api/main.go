@@ -108,8 +108,8 @@ func router(cfg config.Config) (*gin.Engine, func()) {
 
 	productRouter := apiV1Router.Group("/product")
 	{
-		productRepository := product.NewRepository(db)
-		productService := product.NewService(productRepository, redisClient)
+		productRepository := product.NewRepository(db, redisClient)
+		productService := product.NewService(productRepository)
 		productHandler := product.NewHandler(productService)
 		productHandler.InitEndpoints(productRouter)
 	}
