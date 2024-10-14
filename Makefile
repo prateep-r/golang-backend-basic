@@ -8,6 +8,9 @@ init-test:
 	go install go.uber.org/mock/mockgen@latest
 	go get go.uber.org/mock/mockgen/model
 
+test-exercise:
+	go clean -testcache && go test -race ./exercise/...
+
 test:
 	go test -race -short -coverpkg=training/app/... -coverprofile coverage.out ./...
 
