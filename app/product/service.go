@@ -2,9 +2,10 @@ package product
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"time"
 	"training/persistence"
+
+	"github.com/google/uuid"
 )
 
 type Service interface {

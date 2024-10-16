@@ -17,10 +17,11 @@ import (
 	"training/logger"
 	"training/redis"
 
-	"github.com/gin-gonic/gin"
 	"training/app"
 	"training/config"
 	"training/database"
+
+	"github.com/gin-gonic/gin"
 
 	_ "embed"
 	_ "time/tzdata"
@@ -118,6 +119,7 @@ func router(cfg config.Config) (*gin.Engine, func()) {
 
 	return r, func() {
 		db.Close()
+		redisClient.Close()
 	}
 }
 

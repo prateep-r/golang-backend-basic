@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/IBM/sarama"
 )
 
@@ -13,23 +14,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer func(consumer sarama.Consumer) {
-		err := consumer.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(consumer)
+	defer consumer.Close()
 
 	partitionConsumer, err := consumer.ConsumePartition(topic, 0, sarama.OffsetNewest)
 	if err != nil {
 		panic(err)
 	}
-	defer func(partitionConsumer sarama.PartitionConsumer) {
-		err := partitionConsumer.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(partitionConsumer)
+	defer partitionConsumer.Close()
 
 	fmt.Println("Consumer started")
 	for {

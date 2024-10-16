@@ -23,7 +23,7 @@ test-exercise:
 
 .PHONY: test
 test:
-	go test -race -short -coverpkg=training/app/... -coverprofile coverage.out ./...
+	go test -race -short -coverpkg=training/app/... -coverprofile coverage.out ./app/...
 
 .PHONY: database
 database:

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/IBM/sarama"
 )
 
@@ -13,12 +14,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	defer func(producer sarama.SyncProducer) {
-		err := producer.Close()
-		if err != nil {
-			panic(err)
-		}
-	}(producer)
+	defer producer.Close()
 
 	msg := sarama.ProducerMessage{
 		Topic: topic,
