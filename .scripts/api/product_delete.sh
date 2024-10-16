@@ -1,0 +1,1 @@
+curl --location --request DELETE 'http://localhost:8080/api/v1/product/01928a23-aae9-7806-8176-992f4cd0037a'

@@ -9,7 +9,7 @@
 		{
 			"name": "Save Product",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -39,11 +39,11 @@
 		{
 			"name": "Update Product",
 			"request": {
-				"method": "POST",
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"productName\": \"xxx\",\n    \"price\": 123.23\n}",
+					"raw": "{\n    \"productName\": \"yyyy\",\n    \"price\": 123.00\n}",
 					"options": {
 						"raw": {
 							"language": "json"

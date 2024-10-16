@@ -2,11 +2,12 @@ package product
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"training/app"
 	"training/validator"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type Handler struct {
@@ -20,8 +21,8 @@ func NewHandler(service Service) *Handler {
 }
 
 func (h *Handler) InitEndpoints(r gin.IRoutes) {
-	r.PUT("/", h.Save)
-	r.POST("/:productId", h.Update)
+	r.POST("/", h.Save)
+	r.PUT("/:productId", h.Update)
 	r.DELETE("/:productId", h.Delete)
 	r.GET("/:productId", h.Get)
 }
