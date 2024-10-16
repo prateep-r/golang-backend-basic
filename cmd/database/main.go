@@ -28,7 +28,7 @@ func main() {
 		CreatedBy:   "ADMIN",
 		CreatedAt:   time.Now(),
 	}
-	cmd, err := db.Exec(ctx, "insert into product(product_id, product_name, price, created_by, created_at) values($1, $2, $3, $4, $5)",
+	cmd, err := db.Exec(ctx, "insert into products(product_id, product_name, price, created_by, created_at) values($1, $2, $3, $4, $5)",
 		product.ProductId,
 		product.ProductName,
 		product.Price,
@@ -47,7 +47,7 @@ func main() {
 	// product.UpdatedBy = pointer_func.ToPointer("ADMIN")
 	// product.UpdatedAt = pointer_func.ToPointer(time.Now())
 
-	// cmd, err = db.Exec(ctx, "update product set product_name = $1, price = $2, updated_by = $3, updated_at = $4 where product_id = $5",
+	// cmd, err = db.Exec(ctx, "update products set product_name = $1, price = $2, updated_by = $3, updated_at = $4 where product_id = $5",
 	// 	product.ProductName,
 	// 	product.Price,
 	// 	product.UpdatedBy,
@@ -63,7 +63,7 @@ func main() {
 	// **************** Select ******************
 
 	// var getProduct persistence.Product
-	// err = db.QueryRow(ctx, "SELECT product_id, product_name, price, created_by, created_at, updated_by, updated_at FROM product WHERE product_id = $1",
+	// err = db.QueryRow(ctx, "SELECT product_id, product_name, price, created_by, created_at, updated_by, updated_at FROM products WHERE product_id = $1",
 	// 	productId,
 	// ).Scan(&getProduct.ProductId,
 	// 	&getProduct.ProductName,
@@ -81,7 +81,7 @@ func main() {
 
 	// **************** Delete ******************
 	// cmd, err = db.Exec(ctx,
-	// 	"delete from product where product_id = $1",
+	// 	"delete from products where product_id = $1",
 	// 	productId,
 	// )
 	// if err != nil {

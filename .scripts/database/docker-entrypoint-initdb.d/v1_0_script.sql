@@ -1,4 +1,4 @@
-CREATE TABLE product (
+CREATE TABLE products (
     product_id UUID PRIMARY KEY,
     product_name VARCHAR(200),
     price NUMERIC(10,2),
@@ -8,7 +8,7 @@ CREATE TABLE product (
     updated_at TIMESTAMP
 );
 
-CREATE TABLE user (
+CREATE TABLE users (
      user_id UUID PRIMARY KEY,
      user_email VARCHAR(200),
      user_name VARCHAR(200),

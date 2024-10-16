@@ -6,13 +6,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
+	"training/app"
+	"training/persistence"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/redis/go-redis/v9"
-	"time"
-	"training/app"
-	"training/persistence"
 )
 
 type Repository interface {
@@ -38,7 +39,7 @@ func (r *repository) Insert(ctx context.Context, product persistence.Product) (*
 	product.ProductId = uuid.Must(uuid.NewV7())
 
 	_, err := r.db.Exec(ctx,
-		"insert into product(product_id, product_name, price, created_by, created_at) values($1, $2, $3, $4, $5)",
+		"insert into products(product_id, product_name, price, created_by, created_at) values($1, $2, $3, $4, $5)",
 		product.ProductId,
 		product.ProductName,
 		product.Price,
@@ -50,7 +51,7 @@ func (r *repository) Insert(ctx context.Context, product persistence.Product) (*
 
 func (r *repository) Update(ctx context.Context, product persistence.Product) error {
 	cmd, err := r.db.Exec(ctx,
-		"update product set product_name = $1, price = $2, updated_by = $3, updated_at = $4 where product_id = $5",
+		"update products set product_name = $1, price = $2, updated_by = $3, updated_at = $4 where product_id = $5",
 		product.ProductName,
 		product.Price,
 		product.UpdatedBy,
@@ -75,7 +76,7 @@ func (r *repository) Update(ctx context.Context, product persistence.Product) er
 
 func (r *repository) Delete(ctx context.Context, productId uuid.UUID) error {
 	cmd, err := r.db.Exec(ctx,
-		"delete from product where product_id = $1",
+		"delete from products where product_id = $1",
 		productId,
 	)
 	if err != nil {
@@ -120,7 +121,7 @@ func (r *repository) SelectById(ctx context.Context, productId uuid.UUID) (*pers
 func (r *repository) selectByIdFromDB(ctx context.Context, productId uuid.UUID) (*persistence.Product, error) {
 	var product persistence.Product
 	if err := r.db.QueryRow(ctx,
-		"SELECT product_id, product_name, price, created_by, created_at, updated_by, updated_at FROM product WHERE product_id = $1",
+		"SELECT product_id, product_name, price, created_by, created_at, updated_by, updated_at FROM products WHERE product_id = $1",
 		productId,
 	).Scan(&product.ProductId,
 		&product.ProductName,
